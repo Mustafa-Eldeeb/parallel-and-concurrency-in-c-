@@ -24,7 +24,7 @@ void merge(int * array,unsigned int left, unsigned int mid, unsigned int right)
     unsigned int num_left = mid-left+1; // number of elements in left subarray
     unsigned int num_right = right - mid; //unmber of elements in right subarray
 
-    //copy data into temporary left and right subarrays to be merged
+    //copy data into temporary left and right subarrays to be merged.
 
     int array_left[num_left],array_right[num_right];
     std::copy(&array[left],&array[mid+1],array_left);
