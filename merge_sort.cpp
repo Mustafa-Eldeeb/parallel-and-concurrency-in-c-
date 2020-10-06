@@ -1,18 +1,35 @@
 #include <thread>
-
+#include <cmath>
 /*declaration of merge helper function*/
 void merge(int * array,unsigned int left, unsigned int mid, unsigned int right);
 
 /*sequential merge sort function*/
-void sequential_mege_sort(int*array, unsigned int left, unsigned int right)
+void sequential_merge_sort(int*array, unsigned int left, unsigned int right)
 {
     if(left<right)
     {
         unsigned int mid = (left+right)/2;      // find the mid
-        sequential_mege_sort(array, left, mid); //sort the left half
-        sequential_mege_sort(array, mid+1, right); //sort the right half
+        sequential_merge_sort(array, left, mid); //sort the left half
+        sequential_merge_sort(array, mid+1, right); //sort the right half
         merge(array,left,mid, right);    // merge the two sorted halves
     }
+}
+
+void parallel_merge_sort(int * array, unsigned int left, unsigned int right, unsigned int depth =0)
+{
+    if (depth >= std::log(std::thread::hardware_concurrency()))
+    {
+        sequential_merge_sort(array, left, right);
+    }
+    else
+    {
+        unsigned int mid = (left+right)/2;
+        std::thread left_thread = std::thread(parallel_merge_sort, array, left, mid, depth+1);
+        parallel_merge_sort(array, mid+1, right, depth+1);
+        left_thread.join();
+        merge(array, left,mid,right);
+    }
+    
 }
 
 /*helper function to merge two sorted subarrays
